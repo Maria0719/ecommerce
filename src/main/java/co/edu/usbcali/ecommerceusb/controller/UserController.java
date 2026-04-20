@@ -24,7 +24,7 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Integer id) throws Exception {
             return new ResponseEntity <> (userService.getUserById(id),
                     HttpStatus.OK);

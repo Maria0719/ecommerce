@@ -13,7 +13,7 @@ public class UserMapper {
 
         return UserResponse.builder()
                 .id(user.getId())
-                .fillName(user.getFullName())
+                .fullName(user.getFullName())
                 .email(user.getEmail())
                 .documentTypeId(
                         user.getDocumentType() != null ? user.getDocumentType().getId() : null)

@@ -13,7 +13,7 @@ public class UserResponse {
      *No se le pueden modificar los valores y sus atributos
      */
     private Integer id;
-    private String fillName;
+    private String fullName;
     private String email;
     private Integer documentTypeId;
     private String documentTypeName;
