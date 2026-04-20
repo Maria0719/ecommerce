@@ -2,7 +2,6 @@ package co.edu.usbcali.ecommerceusb.controller;
 
 import co.edu.usbcali.ecommerceusb.dto.UserResponse;
 import co.edu.usbcali.ecommerceusb.service.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +19,13 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/all")
-    public List<UserResponse> getAll(){
+    public List<UserResponse> getAll() {
         return userService.getUsers();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Integer id) throws Exception {
-            return new ResponseEntity <> (userService.getUserById(id),
-                    HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserById(id),
+                HttpStatus.OK);
     }
 }
