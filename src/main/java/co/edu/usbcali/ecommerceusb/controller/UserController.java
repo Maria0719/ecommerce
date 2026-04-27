@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
     @Autowired
     private UserService userService;
 
@@ -26,6 +27,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Integer id) throws Exception {
         return new ResponseEntity<>(userService.getUserById(id),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) throws Exception {
+        return new ResponseEntity<>(userService.getUserByEmail(email),
                 HttpStatus.OK);
     }
 }

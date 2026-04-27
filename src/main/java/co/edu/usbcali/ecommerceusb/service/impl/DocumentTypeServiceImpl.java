@@ -1,4 +1,4 @@
-package co.edu.usbcali.ecommerceusb.service.impi;
+package co.edu.usbcali.ecommerceusb.service.impl;
 
 import co.edu.usbcali.ecommerceusb.dto.DocumentTypeResponse;
 import co.edu.usbcali.ecommerceusb.mapper.DocumentTypeMapper;

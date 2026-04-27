@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -54,7 +54,7 @@ public class User {
 
     @Column(name = "birth_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(nullable = false)
     private String country;
