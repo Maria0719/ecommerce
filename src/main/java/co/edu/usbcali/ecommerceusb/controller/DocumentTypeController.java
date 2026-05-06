@@ -2,6 +2,7 @@ package co.edu.usbcali.ecommerceusb.controller;
 
 import co.edu.usbcali.ecommerceusb.dto.CreateDocumentTypeRequest;
 import co.edu.usbcali.ecommerceusb.dto.DocumentTypeResponse;
+import co.edu.usbcali.ecommerceusb.dto.UpdateDocumentTypeRequest;
 import co.edu.usbcali.ecommerceusb.service.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,18 +25,17 @@ public class DocumentTypeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DocumentTypeResponse> getById(@PathVariable Integer id) throws Exception {
-        return new ResponseEntity<>(
-                documentTypeService.getDocumentTypeById(id),
-                HttpStatus.OK
-        );
+        return new ResponseEntity<>(documentTypeService.getDocumentTypeById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<DocumentTypeResponse> createDocumentType(
-            @RequestBody CreateDocumentTypeRequest createDocumentTypeRequest) throws Exception {
-        return new ResponseEntity<>(
-                documentTypeService.createDocumentType(createDocumentTypeRequest),
-                HttpStatus.CREATED
-        );
+    public ResponseEntity<DocumentTypeResponse> createDocumentType(@RequestBody CreateDocumentTypeRequest createDocumentTypeRequest) throws Exception {
+        return new ResponseEntity<>(documentTypeService.createDocumentType(createDocumentTypeRequest), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DocumentTypeResponse> updateDocumentType(@PathVariable Integer id,
+                                                                   @RequestBody UpdateDocumentTypeRequest updateDocumentTypeRequest) throws Exception {
+        return new ResponseEntity<>(documentTypeService.updateDocumentType(id, updateDocumentTypeRequest), HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package co.edu.usbcali.ecommerceusb.controller;
 
 import co.edu.usbcali.ecommerceusb.dto.CategoryResponse;
 import co.edu.usbcali.ecommerceusb.dto.CreateCategoryRequest;
+import co.edu.usbcali.ecommerceusb.dto.UpdateCategoryRequest;
 import co.edu.usbcali.ecommerceusb.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,18 +25,17 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getById(@PathVariable Integer id) throws Exception {
-        return new ResponseEntity<>(
-                categoryService.getCategoryById(id),
-                HttpStatus.OK
-        );
+        return new ResponseEntity<>(categoryService.getCategoryById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(
-            @RequestBody CreateCategoryRequest createCategoryRequest) throws Exception {
-        return new ResponseEntity<>(
-                categoryService.createCategory(createCategoryRequest),
-                HttpStatus.CREATED
-        );
+    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CreateCategoryRequest createCategoryRequest) throws Exception {
+        return new ResponseEntity<>(categoryService.createCategory(createCategoryRequest), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Integer id,
+                                                           @RequestBody UpdateCategoryRequest updateCategoryRequest) throws Exception {
+        return new ResponseEntity<>(categoryService.updateCategory(id, updateCategoryRequest), HttpStatus.OK);
     }
 }

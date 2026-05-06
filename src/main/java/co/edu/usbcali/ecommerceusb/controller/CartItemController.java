@@ -2,6 +2,7 @@ package co.edu.usbcali.ecommerceusb.controller;
 
 import co.edu.usbcali.ecommerceusb.dto.CartItemResponse;
 import co.edu.usbcali.ecommerceusb.dto.CreateCartItemRequest;
+import co.edu.usbcali.ecommerceusb.dto.UpdateCartItemRequest;
 import co.edu.usbcali.ecommerceusb.service.CartItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,18 +25,17 @@ public class CartItemController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CartItemResponse> getById(@PathVariable Integer id) throws Exception {
-        return new ResponseEntity<>(
-                cartItemService.getCartItemById(id),
-                HttpStatus.OK
-        );
+        return new ResponseEntity<>(cartItemService.getCartItemById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<CartItemResponse> createCartItem(
-            @RequestBody CreateCartItemRequest createCartItemRequest) throws Exception {
-        return new ResponseEntity<>(
-                cartItemService.createCartItem(createCartItemRequest),
-                HttpStatus.CREATED
-        );
+    public ResponseEntity<CartItemResponse> createCartItem(@RequestBody CreateCartItemRequest createCartItemRequest) throws Exception {
+        return new ResponseEntity<>(cartItemService.createCartItem(createCartItemRequest), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CartItemResponse> updateCartItem(@PathVariable Integer id,
+                                                           @RequestBody UpdateCartItemRequest updateCartItemRequest) throws Exception {
+        return new ResponseEntity<>(cartItemService.updateCartItem(id, updateCartItemRequest), HttpStatus.OK);
     }
 }

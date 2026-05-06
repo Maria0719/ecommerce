@@ -2,6 +2,7 @@ package co.edu.usbcali.ecommerceusb.service.impl;
 
 import co.edu.usbcali.ecommerceusb.dto.CreateInventoryRequest;
 import co.edu.usbcali.ecommerceusb.dto.InventoryResponse;
+import co.edu.usbcali.ecommerceusb.dto.UpdateInventoryRequest;
 import co.edu.usbcali.ecommerceusb.mapper.InventoryMapper;
 import co.edu.usbcali.ecommerceusb.model.Inventory;
 import co.edu.usbcali.ecommerceusb.model.Product;
@@ -11,6 +12,8 @@ import co.edu.usbcali.ecommerceusb.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,55 +22,56 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
     private InventoryRepository inventoryRepository;
-
     @Autowired
     private ProductRepository productRepository;
 
     @Override
     public List<InventoryResponse> getInventories() {
         List<Inventory> inventories = inventoryRepository.findAll();
-
-        if (inventories.isEmpty()) {
-            return List.of();
-        }
-
+        if (inventories.isEmpty()) return List.of();
         return InventoryMapper.modelToInventoryResponseList(inventories);
     }
 
     @Override
     public InventoryResponse getInventoryById(Integer id) throws Exception {
-        if (id == null || id <= 0) {
-            throw new Exception("Debe ingresar un id válido para buscar");
-        }
-
+        if (id == null || id <= 0) throw new Exception("Debe ingresar un id válido para buscar");
         Inventory inventory = inventoryRepository.findById(id)
-                .orElseThrow(() ->
-                        new Exception(
-                                String.format("Inventario no encontrado con el id: %d", id)));
-
+                .orElseThrow(() -> new Exception(String.format("Inventario no encontrado con el id: %d", id)));
         return InventoryMapper.modelToInventoryResponse(inventory);
     }
 
     @Override
     public InventoryResponse createInventory(CreateInventoryRequest createInventoryRequest) throws Exception {
-        if (Objects.isNull(createInventoryRequest)) {
-            throw new Exception("El objeto createInventoryRequest no puede ser nulo");
-        }
-
-        if (createInventoryRequest.getProductId() == null || createInventoryRequest.getProductId() <= 0) {
+        if (Objects.isNull(createInventoryRequest)) throw new Exception("El objeto createInventoryRequest no puede ser nulo");
+        if (createInventoryRequest.getProductId() == null || createInventoryRequest.getProductId() <= 0)
             throw new Exception("El campo productId debe contener un valor mayor a 0");
-        }
-
-        if (createInventoryRequest.getStock() == null || createInventoryRequest.getStock() < 0) {
+        if (createInventoryRequest.getStock() == null || createInventoryRequest.getStock() < 0)
             throw new Exception("El campo stock no puede ser nulo y debe ser mayor o igual a 0");
-        }
-
         Product product = productRepository.findById(createInventoryRequest.getProductId())
                 .orElseThrow(() -> new Exception("El producto no existe"));
-
         Inventory inventory = InventoryMapper.createInventoryRequestToInventory(createInventoryRequest, product);
         inventory = inventoryRepository.save(inventory);
+        return InventoryMapper.modelToInventoryResponse(inventory);
+    }
 
+    @Override
+    public InventoryResponse updateInventory(Integer id, UpdateInventoryRequest updateInventoryRequest) throws Exception {
+        if (id == null || id <= 0) throw new Exception("Debe ingresar un id válido para actualizar");
+        if (Objects.isNull(updateInventoryRequest)) throw new Exception("El objeto updateInventoryRequest no puede ser nulo");
+        if (updateInventoryRequest.getProductId() == null || updateInventoryRequest.getProductId() <= 0)
+            throw new Exception("El campo productId debe contener un valor mayor a 0");
+        if (updateInventoryRequest.getStock() == null || updateInventoryRequest.getStock() < 0)
+            throw new Exception("El campo stock no puede ser nulo y debe ser mayor o igual a 0");
+
+        Inventory inventory = inventoryRepository.findById(id)
+                .orElseThrow(() -> new Exception(String.format("Inventario no encontrado con el id: %d", id)));
+        Product product = productRepository.findById(updateInventoryRequest.getProductId())
+                .orElseThrow(() -> new Exception("El producto no existe"));
+
+        inventory.setProduct(product);
+        inventory.setStock(updateInventoryRequest.getStock());
+        inventory.setUpdatedAt(Timestamp.from(Instant.now()));
+        inventory = inventoryRepository.save(inventory);
         return InventoryMapper.modelToInventoryResponse(inventory);
     }
 }
