@@ -1,3 +1,4 @@
+//intermediario entre la interfaz de usuario (Vista) y la lógica de negocio/datos (Modelo)
 package co.edu.usbcali.ecommerceusb.controller;
 
 import co.edu.usbcali.ecommerceusb.dto.CartResponse;
@@ -33,9 +34,13 @@ public class CartController {
         return new ResponseEntity<>(cartService.createCart(createCartRequest), HttpStatus.CREATED);
     }
 
+    //actualizar carrito, recibe id por url
     @PutMapping("/{id}")
-    public ResponseEntity<CartResponse> updateCart(@PathVariable Integer id,
-                                                   @RequestBody UpdateCartRequest updateCartRequest) throws Exception {
+    public ResponseEntity<CartResponse> updateCart(
+            @PathVariable Integer id,                      //agarra id
+            @RequestBody UpdateCartRequest updateCartRequest) //agarra json pues en cambios
+            throws Exception {
+        //pasa trabajo al servicio y devuelve acctualizado
         return new ResponseEntity<>(cartService.updateCart(id, updateCartRequest), HttpStatus.OK);
     }
 }

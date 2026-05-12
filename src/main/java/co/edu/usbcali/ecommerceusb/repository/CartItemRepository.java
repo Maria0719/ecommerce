@@ -1,3 +1,4 @@
+//espacio de almacenamiento centralizado
 package co.edu.usbcali.ecommerceusb.repository;
 
 import co.edu.usbcali.ecommerceusb.model.CartItem;
