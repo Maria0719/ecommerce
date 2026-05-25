@@ -38,4 +38,8 @@ public class OrderItemController {
                                                              @RequestBody UpdateOrderItemRequest updateOrderItemRequest) throws Exception {
         return new ResponseEntity<>(orderItemService.updateOrderItem(id, updateOrderItemRequest), HttpStatus.OK);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrderItem(@PathVariable Integer id) throws Exception {orderItemService.deleteOrderItem(id);
+        return ResponseEntity.noContent().build();
+    }
 }

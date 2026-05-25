@@ -107,4 +107,11 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         return UserMapper.modelToUserResponse(user);
     }
+
+    @Override
+    public void deleteUser(Integer id) throws Exception {
+        if (id == null || id <= 0) throw new Exception("Debe ingresar un id válido para eliminar");
+        User user = userRepository.findById(id).orElseThrow(() -> new Exception(String.format("User no encontrado con el id: %d", id)));
+        userRepository.delete(user);
+    }
 }

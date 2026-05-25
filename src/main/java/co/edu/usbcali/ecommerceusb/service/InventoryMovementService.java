@@ -13,4 +13,6 @@ public interface InventoryMovementService {
     InventoryMovementResponse createInventoryMovement(CreateInventoryMovementRequest createInventoryMovementRequest) throws Exception;
     InventoryMovementResponse updateInventoryMovement(Integer id, UpdateInventoryMovementRequest updateInventoryMovementRequest) throws Exception;
 
+    void deleteInventoryMovement(Integer id) throws Exception;
+
 }

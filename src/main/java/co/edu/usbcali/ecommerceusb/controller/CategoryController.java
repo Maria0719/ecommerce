@@ -38,4 +38,9 @@ public class CategoryController {
                                                            @RequestBody UpdateCategoryRequest updateCategoryRequest) throws Exception {
         return new ResponseEntity<>(categoryService.updateCategory(id, updateCategoryRequest), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) throws Exception {categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -76,4 +76,11 @@ public class OrderServiceImpl implements OrderService {
         order = orderRepository.save(order);
         return OrderMapper.modelToOrderResponse(order);
     }
+
+    @Override
+    public void deleteOrder(Integer id) throws Exception {
+        if (id == null || id <= 0) throw new Exception("Debe ingresar un id válido para eliminar");
+        Order order = orderRepository.findById(id).orElseThrow(() -> new Exception(String.format("Order no encontrado con el id: %d", id)));
+        orderRepository.delete(order);
+    }
 }

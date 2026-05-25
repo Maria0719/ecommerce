@@ -38,4 +38,10 @@ public class CartItemController {
                                                            @RequestBody UpdateCartItemRequest updateCartItemRequest) throws Exception {
         return new ResponseEntity<>(cartItemService.updateCartItem(id, updateCartItemRequest), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCartItem(@PathVariable Integer id) throws Exception {
+        cartItemService.deleteCartItem(id);
+        return ResponseEntity.noContent().build();
+    }
 }

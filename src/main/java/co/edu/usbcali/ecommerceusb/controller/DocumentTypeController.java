@@ -38,4 +38,9 @@ public class DocumentTypeController {
                                                                    @RequestBody UpdateDocumentTypeRequest updateDocumentTypeRequest) throws Exception {
         return new ResponseEntity<>(documentTypeService.updateDocumentType(id, updateDocumentTypeRequest), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDocumentType(@PathVariable Integer id) throws Exception {documentTypeService.deleteDocumentType(id);
+        return ResponseEntity.noContent().build();
+    }
 }

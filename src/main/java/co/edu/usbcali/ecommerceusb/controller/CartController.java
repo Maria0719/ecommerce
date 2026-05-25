@@ -43,4 +43,12 @@ public class CartController {
         //pasa trabajo al servicio y devuelve acctualizado
         return new ResponseEntity<>(cartService.updateCart(id, updateCartRequest), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCart(@PathVariable Integer id) throws Exception {
+        cartService.deleteCart(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

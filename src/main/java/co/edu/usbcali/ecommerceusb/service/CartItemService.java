@@ -13,4 +13,5 @@ public interface CartItemService {
     CartItemResponse createCartItem(CreateCartItemRequest createCartItemRequest) throws Exception;
     CartItemResponse updateCartItem(Integer id, UpdateCartItemRequest updateCartItemRequest) throws Exception;
 
+    void deleteCartItem(Integer id) throws Exception;
 }

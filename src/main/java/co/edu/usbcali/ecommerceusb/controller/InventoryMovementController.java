@@ -39,4 +39,8 @@ public class InventoryMovementController {
                                                                              @RequestBody UpdateInventoryMovementRequest updateInventoryMovementRequest) throws Exception {
         return new ResponseEntity<>(inventoryMovementService.updateInventoryMovement(id, updateInventoryMovementRequest), HttpStatus.OK);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInventoryMovement(@PathVariable Integer id) throws Exception {inventoryMovementService.deleteInventoryMovement(id);
+        return ResponseEntity.noContent().build();
+    }
 }

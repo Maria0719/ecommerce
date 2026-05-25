@@ -75,4 +75,11 @@ public class CartServiceImpl implements CartService {
         cart = cartRepository.save(cart);
         return CartMapper.modelToCartResponse(cart);
     }
+
+    @Override
+    public void deleteCart(Integer id) throws Exception {
+        if (id == null || id <= 0) throw new Exception("Debe ingresar un id válido para eliminar");
+        Cart cart = cartRepository.findById(id).orElseThrow(() -> new Exception(String.format("Cart no encontrado con el id: %d", id)));
+        cartRepository.delete(cart);
+    }
 }

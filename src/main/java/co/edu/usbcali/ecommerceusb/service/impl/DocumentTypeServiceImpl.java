@@ -68,4 +68,11 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
         documentType = documentTypeRepository.save(documentType);
         return DocumentTypeMapper.modelToDocumentTypeResponse(documentType);
     }
+
+    @Override
+    public void deleteDocumentType(Integer id) throws Exception {
+        if (id == null || id <= 0) throw new Exception("Debe ingresar un id válido para eliminar");
+        DocumentType documentType = documentTypeRepository.findById(id).orElseThrow(() -> new Exception(String.format("DocumentType no encontrado con el id: %d", id)));
+        documentTypeRepository.delete(documentType);
+    }
 }

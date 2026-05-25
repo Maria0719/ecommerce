@@ -13,4 +13,7 @@ public interface UserService {
     UserResponse createUser(CreateUserRequest createUserRequest) throws  Exception;
     UserResponse updateUser(Integer id, UpdateUserRequest updateUserRequest) throws Exception;
 
+    void deleteUser(Integer id) throws Exception;
+
+
 }

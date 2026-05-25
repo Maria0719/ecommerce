@@ -38,4 +38,9 @@ public class ProductController {
                                                          @RequestBody UpdateProductRequest updateProductRequest) throws Exception {
         return new ResponseEntity<>(productService.updateProduct(id, updateProductRequest), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) throws Exception {productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
 }

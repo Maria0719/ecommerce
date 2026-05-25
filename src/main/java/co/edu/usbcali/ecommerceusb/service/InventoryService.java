@@ -12,4 +12,7 @@ public interface InventoryService {
     InventoryResponse createInventory(CreateInventoryRequest createInventoryRequest) throws Exception;
     InventoryResponse updateInventory(Integer id, UpdateInventoryRequest updateInventoryRequest) throws Exception;
 
+    void deleteInventory(Integer id) throws Exception;
+
+
 }

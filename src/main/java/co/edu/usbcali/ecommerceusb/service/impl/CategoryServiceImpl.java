@@ -72,4 +72,11 @@ public class CategoryServiceImpl implements CategoryService {
         category = categoryRepository.save(category);
         return CategoryMapper.modelToCategoryResponse(category);
     }
+
+    @Override
+    public void deleteCategory(Integer id) throws Exception {
+        if (id == null || id <= 0) throw new Exception("Debe ingresar un id válido para eliminar");
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new Exception(String.format("Category no encontrado con el id: %d", id)));
+        categoryRepository.delete(category);
+    }
 }

@@ -38,4 +38,8 @@ public class PaymentController {
                                                          @RequestBody UpdatePaymentRequest updatePaymentRequest) throws Exception {
         return new ResponseEntity<>(paymentService.updatePayment(id, updatePaymentRequest), HttpStatus.OK);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePayment(@PathVariable Integer id) throws Exception {paymentService.deletePayment(id);
+        return ResponseEntity.noContent().build();
+    }
 }
