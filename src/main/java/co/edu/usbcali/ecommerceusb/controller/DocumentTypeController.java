@@ -40,7 +40,8 @@ public class DocumentTypeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDocumentType(@PathVariable Integer id) throws Exception {documentTypeService.deleteDocumentType(id);
+    public ResponseEntity<Void> deleteDocumentType(@PathVariable Integer id) throws Exception {
+        documentTypeService.deleteDocumentType(id);
         return ResponseEntity.noContent().build();
     }
 }
