@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Productos - Ecommerce USB</title>
+<style>
+  /* ====== Paleta pastel con predominio del morado ====== */
+  :root{
+    --bg-grad-1:#efe7fb; --bg-grad-2:#f7f0fa;
+    --surface:#ffffff; --surface-soft:#faf7ff;
+    --lila-soft:#e7defb; --lila-deep:#7c5fc4; --lila-deeper:#5f47a0; --violet:#9d86d9;
+    --text:#3d3552; --text-soft:#6f6488; --border:#e6ddf5;
+    --ok-bg:#e4f6ec; --ok-bd:#bfe7cf; --ok-tx:#2f7a52;
+    --err-bg:#fbe6ec; --err-bd:#f2c2d0; --err-tx:#a83a5b;
+    --radius:16px; --radius-sm:10px;
+    --shadow:0 10px 30px rgba(124,95,196,.12); --shadow-soft:0 4px 14px rgba(124,95,196,.10);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font);color:var(--text);
+    background:linear-gradient(135deg,var(--bg-grad-1),var(--bg-grad-2));
+    background-attachment:fixed;min-height:100vh;line-height:1.5;padding:32px 16px 64px}
+  .wrap{max-width:1040px;margin:0 auto}
+  header.app{text-align:center;margin-bottom:28px}
+  header.app h1{font-size:2rem;font-weight:700;letter-spacing:-.5px;color:var(--lila-deeper)}
+  header.app p{color:var(--text-soft);margin-top:6px;font-size:.98rem}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:24px;margin-bottom:24px}
+  .panel h2{font-size:1.2rem;color:var(--lila-deeper);margin-bottom:18px;font-weight:700}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field.full{grid-column:1 / -1}
+  label{font-size:.86rem;font-weight:600;color:var(--text-soft)}
+  input[type=text],input[type=number],textarea{font-family:var(--font);font-size:.95rem;color:var(--text);
+    background:var(--surface-soft);border:1.5px solid var(--border);border-radius:var(--radius-sm);
+    padding:11px 13px;transition:border-color .18s,box-shadow .18s,background .18s;width:100%}
+  input:focus,textarea:focus{outline:none;border-color:var(--violet);background:#fff;box-shadow:0 0 0 4px var(--lila-soft)}
+  input.invalid,textarea.invalid{border-color:var(--err-bd);background:var(--err-bg)}
+  textarea{resize:vertical;min-height:72px}
+  .checkbox-row{display:flex;align-items:center;gap:10px;background:var(--surface-soft);
+    border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;cursor:pointer}
+  .checkbox-row input{width:18px;height:18px;accent-color:var(--lila-deep);cursor:pointer}
+  .field-error{font-size:.8rem;color:var(--err-tx);min-height:1em}
+  .btn{font-family:var(--font);font-size:.92rem;font-weight:600;border:none;border-radius:var(--radius-sm);
+    padding:11px 20px;cursor:pointer;transition:transform .12s,box-shadow .18s,background .18s,opacity .18s}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--lila-deep);color:#fff;box-shadow:var(--shadow-soft)}
+  .btn-primary:hover{background:var(--lila-deeper)}
+  .btn-ghost{background:var(--lila-soft);color:var(--lila-deeper)}
+  .btn-ghost:hover{background:#dccef7}
+  .btn-edit{background:var(--lila-soft);color:var(--lila-deeper);padding:8px 14px;font-size:.84rem}
+  .btn-edit:hover{background:#dccef7}
+  .btn-del{background:var(--err-bg);color:var(--err-tx);padding:8px 14px;font-size:.84rem}
+  .btn-del:hover{background:#f7d3de}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .form-actions{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+  .table-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap}
+  .table-wrap{overflow-x:auto;border-radius:var(--radius-sm)}
+  table{width:100%;border-collapse:collapse;min-width:620px}
+  th,td{text-align:left;padding:13px 14px;font-size:.92rem}
+  thead th{background:var(--lila-soft);color:var(--lila-deeper);font-weight:700;font-size:.82rem;
+    text-transform:uppercase;letter-spacing:.4px}
+  thead th:first-child{border-radius:var(--radius-sm) 0 0 0}
+  thead th:last-child{border-radius:0 var(--radius-sm) 0 0}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
+  tbody tr:hover{background:var(--surface-soft)}
+  td.actions{white-space:nowrap;display:flex;gap:8px}
+  .pill{display:inline-block;padding:3px 11px;border-radius:999px;font-size:.78rem;font-weight:600}
+  .pill-yes{background:var(--ok-bg);color:var(--ok-tx)}
+  .pill-no{background:#efeaf6;color:var(--text-soft)}
+  .price{font-weight:600;color:var(--lila-deeper)}
+  .state-msg{text-align:center;padding:34px 16px;color:var(--text-soft)}
+  .state-msg.error{color:var(--err-tx)}
+  #toasts{position:fixed;top:18px;right:18px;z-index:1000;display:flex;flex-direction:column;gap:10px;max-width:360px}
+  .toast{padding:13px 16px;border-radius:var(--radius-sm);border:1.5px solid;box-shadow:var(--shadow);
+    font-size:.9rem;font-weight:500;animation:slidein .25s ease}
+  .toast.ok{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok-tx)}
+  .toast.err{background:var(--err-bg);border-color:var(--err-bd);color:var(--err-tx)}
+  @keyframes slidein{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+  .overlay{position:fixed;inset:0;background:rgba(61,53,82,.35);display:flex;align-items:center;
+    justify-content:center;z-index:900;padding:16px}
+  .modal{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;
+    max-width:400px;width:100%;animation:pop .2s ease}
+  @keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+  .modal h3{color:var(--lila-deeper);margin-bottom:10px;font-size:1.1rem}
+  .modal p{color:var(--text-soft);font-size:.94rem;margin-bottom:20px}
+  .modal .form-actions{margin-top:0}
+  .api-note{text-align:center;font-size:.8rem;color:var(--text-soft);margin-top:6px}
+  .api-note code{background:var(--lila-soft);padding:2px 7px;border-radius:6px;color:var(--lila-deeper)}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}header.app h1{font-size:1.6rem}.panel{padding:18px}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- React cargado localmente (sin CDN, funciona sin internet). Servido por Spring desde /vendor/ -->
+<script src="vendor/react.production.min.js"></script>
+<script src="vendor/react-dom.production.min.js"></script>
+<script src="vendor/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useCallback, useRef } = React;
+
+/* ==========================================================
+   URL BASE DEL API (cambiar aqui si el backend esta en otro host/puerto)
+   ========================================================== */
+const API_BASE = "http://localhost:8080";
+const PRODUCT_URL = API_BASE + "/product";
+
+/* ---------- Lectura del JSON de error del backend ----------
+   ErrorResponse { status, error, message, timestamp } -> mostramos message */
+async function readError(response){
+  try{
+    const data = await response.json();
+    if (data && data.message) return data.message;
+    if (data && data.error)   return data.error;
+  }catch(e){ /* sin JSON */ }
+  return "Error " + response.status + " del servidor.";
+}
+
+function fmtPrice(p){
+  const n = Number(p);
+  if (!Number.isFinite(n)) return String(p);
+  return n.toLocaleString("es-CO", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+/* ====================== Toasts ====================== */
+function Toasts({ items }){
+  return (
+    <div id="toasts">
+      {items.map(t => (
+        <div key={t.id} className={"toast " + (t.type === "ok" ? "ok" : "err")}>{t.text}</div>
+      ))}
+    </div>
+  );
+}
+
+/* ====================== Formulario crear/editar ====================== */
+function ProductForm({ editing, initial, onSubmit, onCancel }){
+  const [name, setName]   = useState("");
+  const [price, setPrice] = useState("");
+  const [desc, setDesc]   = useState("");
+  const [avail, setAvail] = useState(true);
+  const [errors, setErrors] = useState({});
+  const [busy, setBusy]   = useState(false);
+
+  // Precarga al entrar en modo edicion (datos de GET /product/{id})
+  useEffect(() => {
+    if (editing && initial){
+      setName(initial.name || "");
+      setDesc(initial.description || "");
+      setPrice(initial.price !== null && initial.price !== undefined ? String(initial.price) : "");
+      setAvail(!!initial.available);
+      setErrors({});
+    }
+  }, [editing, initial]);
+
+  function reset(){
+    setName(""); setPrice(""); setDesc(""); setAvail(true); setErrors({});
+  }
+
+  /* Validacion en el frontend, replica las reglas del backend:
+     name obligatorio, price numerico y > 0 (rechaza cero y negativos) */
+  function validate(){
+    const e = {};
+    if (name.trim() === "") e.name = "El nombre es obligatorio.";
+    const raw = price.trim();
+    if (raw === ""){
+      e.price = "El precio es obligatorio.";
+    }else{
+      const n = Number(raw);
+      if (!Number.isFinite(n)) e.price = "El precio debe ser un numero valido.";
+      else if (n <= 0) e.price = "El precio debe ser mayor a 0 (no se permiten cero ni negativos).";
+    }
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
+
+  async function handleSubmit(ev){
+    ev.preventDefault();
+    if (!validate()) return;
+    // Body con nombres EXACTOS del Swagger: name, description, price, available
+    const body = { name: name.trim(), description: desc.trim(), price: Number(price), available: avail };
+    setBusy(true);
+    const ok = await onSubmit(body);
+    setBusy(false);
+    if (ok && !editing) reset();
+  }
+
+  return (
+    <section className="panel">
+      <h2>{editing ? "Editar producto (id " + initial.id + ")" : "Agregar producto"}</h2>
+      <form onSubmit={handleSubmit} noValidate>
+        <div className="grid">
+          <div className="field">
+            <label htmlFor="name">Nombre</label>
+            <input id="name" type="text" placeholder="Nombre del producto"
+              className={errors.name ? "invalid" : ""}
+              value={name} onChange={e => setName(e.target.value)} />
+            <span className="field-error">{errors.name || ""}</span>
+          </div>
+          <div className="field">
+            <label htmlFor="price">Precio</label>
+            <input id="price" type="number" step="0.01" min="0" placeholder="0.00"
+              className={errors.price ? "invalid" : ""}
+              value={price} onChange={e => setPrice(e.target.value)} />
+            <span className="field-error">{errors.price || ""}</span>
+          </div>
+          <div className="field full">
+            <label htmlFor="description">Descripcion</label>
+            <textarea id="description" placeholder="Descripcion del producto"
+              value={desc} onChange={e => setDesc(e.target.value)} />
+            <span className="field-error"></span>
+          </div>
+          <div className="field">
+            <label htmlFor="available">Disponibilidad</label>
+            <label className="checkbox-row" htmlFor="available">
+              <input id="available" type="checkbox" checked={avail}
+                onChange={e => setAvail(e.target.checked)} />
+              <span>Producto disponible</span>
+            </label>
+          </div>
+        </div>
+        <div className="form-actions">
+          <button type="submit" className="btn btn-primary" disabled={busy}>
+            {busy ? (editing ? "Actualizando..." : "Guardando...") : (editing ? "Actualizar producto" : "Guardar producto")}
+          </button>
+          {editing && (
+            <button type="button" className="btn btn-ghost" onClick={onCancel}>Cancelar edicion</button>
+          )}
+        </div>
+      </form>
+    </section>
+  );
+}
+
+/* ====================== Tabla de productos ====================== */
+function ProductTable({ status, products, error, onReload, onEdit, onAskDelete }){
+  let inner;
+  if (status === "loading"){
+    inner = <div className="state-msg">Cargando productos...</div>;
+  }else if (status === "down"){
+    inner = <div className="state-msg error">No hay conexion con el backend. Verifique que el microservicio este corriendo en {API_BASE}.</div>;
+  }else if (status === "error"){
+    inner = <div className="state-msg error">No se pudo cargar la lista: {error}</div>;
+  }else if (!products || products.length === 0){
+    inner = <div className="state-msg">No hay productos registrados todavia.</div>;
+  }else{
+    inner = (
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Descripcion</th><th>Precio</th><th>Disponible</th><th>Acciones</th></tr>
+          </thead>
+          <tbody>
+            {products.map(p => (
+              <tr key={p.id}>
+                <td>{p.id}</td>
+                <td>{p.name}</td>
+                <td>{p.description}</td>
+                <td className="price">{fmtPrice(p.price)}</td>
+                <td>{p.available
+                  ? <span className="pill pill-yes">Disponible</span>
+                  : <span className="pill pill-no">No disponible</span>}</td>
+                <td className="actions">
+                  <button className="btn btn-edit" onClick={() => onEdit(p.id)}>Editar</button>
+                  <button className="btn btn-del" onClick={() => onAskDelete(p)}>Eliminar</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+  return (
+    <section className="panel">
+      <div className="table-head">
+        <h2 style={{margin:0}}>Listado de productos</h2>
+        <button type="button" className="btn btn-ghost" onClick={onReload}>Refrescar</button>
+      </div>
+      {inner}
+    </section>
+  );
+}
+
+/* ====================== Modal de confirmacion ====================== */
+function ConfirmModal({ product, busy, onYes, onNo }){
+  if (!product) return null;
+  return (
+    <div className="overlay" onClick={e => { if (e.target === e.currentTarget) onNo(); }}>
+      <div className="modal">
+        <h3>Eliminar producto</h3>
+        <p>Esta seguro de eliminar el producto "{product.name || ("id " + product.id)}"? Esta accion no se puede deshacer.</p>
+        <div className="form-actions">
+          <button type="button" className="btn btn-del" disabled={busy} onClick={onYes}>
+            {busy ? "Eliminando..." : "Si, eliminar"}
+          </button>
+          <button type="button" className="btn btn-ghost" onClick={onNo}>Cancelar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ====================== App principal ====================== */
+function App(){
+  const [status, setStatus]     = useState("loading"); // loading | ok | error | down
+  const [products, setProducts] = useState([]);
+  const [listError, setListError] = useState("");
+  const [editing, setEditing]   = useState(null);      // ProductResponse en edicion
+  const [toDelete, setToDelete] = useState(null);
+  const [delBusy, setDelBusy]   = useState(false);
+
+  const [toasts, setToasts] = useState([]);
+  const toastId = useRef(0);
+  const pushToast = useCallback((text, type) => {
+    const id = ++toastId.current;
+    setToasts(t => [...t, { id, text, type }]);
+    setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3800);
+  }, []);
+
+  /* GET /product/all */
+  const loadProducts = useCallback(async () => {
+    setStatus("loading");
+    try{
+      const res = await fetch(PRODUCT_URL + "/all");
+      if (!res.ok){
+        setListError(await readError(res));
+        setStatus("error");
+        return;
+      }
+      const data = await res.json();
+      setProducts(Array.isArray(data) ? data : []);
+      setStatus("ok");
+    }catch(e){
+      setStatus("down"); // backend caido / sin conexion
+    }
+  }, []);
+
+  useEffect(() => { loadProducts(); }, [loadProducts]);
+
+  /* GET /product/{id} -> precargar para editar */
+  async function startEdit(id){
+    try{
+      const res = await fetch(PRODUCT_URL + "/" + encodeURIComponent(id));
+      if (!res.ok){ pushToast(await readError(res), "err"); return; }
+      const p = await res.json();
+      setEditing(p);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }catch(e){ pushToast("No hay conexion con el backend.", "err"); }
+  }
+
+  /* POST /product (crear) | PUT /product/{id} (editar) */
+  async function submitProduct(body){
+    const isEdit = !!editing;
+    try{
+      const url    = isEdit ? PRODUCT_URL + "/" + encodeURIComponent(editing.id) : PRODUCT_URL;
+      const method = isEdit ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok){ pushToast(await readError(res), "err"); return false; } // 400/404/500
+      pushToast(isEdit ? "Producto actualizado correctamente." : "Producto creado correctamente.", "ok");
+      setEditing(null);
+      loadProducts();
+      return true;
+    }catch(e){
+      pushToast("No hay conexion con el backend. Verifique que este corriendo.", "err");
+      return false;
+    }
+  }
+
+  /* DELETE /product/{id} */
+  async function confirmDelete(){
+    if (!toDelete) return;
+    setDelBusy(true);
+    try{
+      const res = await fetch(PRODUCT_URL + "/" + encodeURIComponent(toDelete.id), { method: "DELETE" });
+      if (!res.ok){ pushToast(await readError(res), "err"); return; }
+      let msg = "Producto eliminado correctamente.";
+      try{ const d = await res.json(); if (d && d.message) msg = d.message; }catch(e){}
+      pushToast(msg, "ok");
+      loadProducts();
+    }catch(e){
+      pushToast("No hay conexion con el backend.", "err");
+    }finally{
+      setDelBusy(false);
+      setToDelete(null);
+    }
+  }
+
+  return (
+    <React.Fragment>
+      <Toasts items={toasts} />
+      <div className="wrap">
+        <header className="app">
+          <h1>Gestion de Productos</h1>
+          <p>Ecommerce USB - consumo del microservicio segun el contrato Swagger</p>
+        </header>
+
+        <ProductForm
+          editing={!!editing}
+          initial={editing}
+          onSubmit={submitProduct}
+          onCancel={() => setEditing(null)}
+        />
+
+        <ProductTable
+          status={status}
+          products={products}
+          error={listError}
+          onReload={loadProducts}
+          onEdit={startEdit}
+          onAskDelete={setToDelete}
+        />
+
+        <p className="api-note">API: <code>{PRODUCT_URL}</code></p>
+      </div>
+
+      <ConfirmModal
+        product={toDelete}
+        busy={delBusy}
+        onYes={confirmDelete}
+        onNo={() => setToDelete(null)}
+      />
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
