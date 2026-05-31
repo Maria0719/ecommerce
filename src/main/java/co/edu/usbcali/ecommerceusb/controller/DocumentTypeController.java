@@ -1,6 +1,7 @@
 package co.edu.usbcali.ecommerceusb.controller;
 
 import co.edu.usbcali.ecommerceusb.dto.CreateDocumentTypeRequest;
+import co.edu.usbcali.ecommerceusb.dto.DeleteDocumentTypeResponse;
 import co.edu.usbcali.ecommerceusb.dto.DocumentTypeResponse;
 import co.edu.usbcali.ecommerceusb.dto.UpdateDocumentTypeRequest;
 import co.edu.usbcali.ecommerceusb.service.DocumentTypeService;
@@ -40,8 +41,8 @@ public class DocumentTypeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDocumentType(@PathVariable Integer id) throws Exception {
-        documentTypeService.deleteDocumentType(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<DeleteDocumentTypeResponse> deleteDocumentType(
+            @PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(documentTypeService.deleteDocumentType(id), HttpStatus.OK);
     }
 }

@@ -4,8 +4,9 @@ import co.edu.usbcali.ecommerceusb.dto.CreatePaymentRequest;
 import co.edu.usbcali.ecommerceusb.dto.PaymentResponse;
 import co.edu.usbcali.ecommerceusb.model.Order;
 import co.edu.usbcali.ecommerceusb.model.Payment;
+import co.edu.usbcali.ecommerceusb.model.PaymentStatus;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class PaymentMapper {
@@ -14,9 +15,10 @@ public class PaymentMapper {
         return PaymentResponse.builder()
                 .id(payment.getId())
                 .orderId(payment.getOrder() != null ? payment.getOrder().getId() : null)
-                .status(payment.getStatus())
+                .status(payment.getStatus() != null ? payment.getStatus().name() : null)
                 .providerRef(payment.getProviderRef())
                 .idempotencyKey(payment.getIdempotencyKey())
+                .createdAt(payment.getCreatedAt())
                 .build();
     }
 
@@ -27,10 +29,10 @@ public class PaymentMapper {
     public static Payment createPaymentRequestToPayment(CreatePaymentRequest request, Order order) {
         return Payment.builder()
                 .order(order)
-                .status(request.getStatus())
+                .status(PaymentStatus.valueOf(request.getStatus()))
                 .providerRef(request.getProviderRef())
                 .idempotencyKey(request.getIdempotencyKey())
-                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(OffsetDateTime.now())
                 .build();
     }
 }

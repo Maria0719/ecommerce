@@ -1,12 +1,9 @@
 package co.edu.usbcali.ecommerceusb.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -15,13 +12,8 @@ import java.sql.Timestamp;
 @Entity
 @Table(
         name = "cart_items",
-        schema = "public",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uq_cart_product", columnNames = {"cart_id", "product_id"})
-        },
-        indexes = {
-                @Index(name = "idx_cart_items_cart", columnList = "cart_id"),
-                @Index(name = "idx_cart_items_product", columnList = "product_id")
+                @UniqueConstraint(columnNames = {"cart_id", "product_id"})
         }
 )
 public class CartItem {
@@ -30,15 +22,16 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "cart_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "fk_cart_items_cart")
+            foreignKey = @ForeignKey(name = "fk_cart_items_product"),
+            referencedColumnName = "id"
     )
     private Cart cart;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "product_id",
             nullable = false,
@@ -50,9 +43,16 @@ public class CartItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp createdAt;
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false
+    )
+    private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp updatedAt;
+    @Column(
+            name = "updated_at",
+            nullable = false
+    )
+    private OffsetDateTime updatedAt;
 }

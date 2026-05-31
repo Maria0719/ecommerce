@@ -4,7 +4,7 @@ import co.edu.usbcali.ecommerceusb.dto.CreateProductRequest;
 import co.edu.usbcali.ecommerceusb.dto.ProductResponse;
 import co.edu.usbcali.ecommerceusb.model.Product;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class ProductMapper {
@@ -24,14 +24,13 @@ public class ProductMapper {
     }
 
     public static Product createProductRequestToProduct(CreateProductRequest request) {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         return Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
-                .available(request.getAvailable() != null ? request.getAvailable() : true)
-                .createdAt(timestamp)
-                .updatedAt(timestamp)
+                .available(request.getAvailable())
+                .createdAt(OffsetDateTime.now())
+                .updatedAt(OffsetDateTime.now())
                 .build();
     }
 }

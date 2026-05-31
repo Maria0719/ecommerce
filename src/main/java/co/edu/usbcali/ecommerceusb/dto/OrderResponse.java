@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 @Builder
 @Getter
@@ -14,4 +15,7 @@ public class OrderResponse {
     private String status;
     private BigDecimal totalAmount;
     private String currency;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime paidAt;
+    private OffsetDateTime cancelledAt;
 }

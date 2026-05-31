@@ -1,6 +1,7 @@
 package co.edu.usbcali.ecommerceusb.controller;
 
 import co.edu.usbcali.ecommerceusb.dto.CreateOrderItemRequest;
+import co.edu.usbcali.ecommerceusb.dto.DeleteOrderItemResponse;
 import co.edu.usbcali.ecommerceusb.dto.OrderItemResponse;
 import co.edu.usbcali.ecommerceusb.dto.UpdateOrderItemRequest;
 import co.edu.usbcali.ecommerceusb.service.OrderItemService;
@@ -39,7 +40,8 @@ public class OrderItemController {
         return new ResponseEntity<>(orderItemService.updateOrderItem(id, updateOrderItemRequest), HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrderItem(@PathVariable Integer id) throws Exception {orderItemService.deleteOrderItem(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<DeleteOrderItemResponse> deleteOrderItem(
+            @PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(orderItemService.deleteOrderItem(id), HttpStatus.OK);
     }
 }

@@ -20,8 +20,11 @@ public class ProductCategoryMapper {
                 .build();
     }
 
-    public static List<ProductCategoryResponse> modelToProductCategoryResponseList(List<ProductCategory> productCategories) {
-        return productCategories.stream().map(ProductCategoryMapper::modelToProductCategoryResponse).toList();
+    public static List<ProductCategoryResponse> modelToProductCategoryResponseList(
+            List<ProductCategory> productCategories) {
+        return productCategories.stream()
+                .map(ProductCategoryMapper::modelToProductCategoryResponse)
+                .toList();
     }
 
     public static ProductCategory createProductCategoryRequestToProductCategory(

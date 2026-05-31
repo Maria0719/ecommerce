@@ -5,7 +5,7 @@ import co.edu.usbcali.ecommerceusb.dto.CreateCartRequest;
 import co.edu.usbcali.ecommerceusb.model.Cart;
 import co.edu.usbcali.ecommerceusb.model.User;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class CartMapper {
@@ -13,9 +13,9 @@ public class CartMapper {
     public static CartResponse modelToCartResponse(Cart cart) {
         return CartResponse.builder()
                 .id(cart.getId())
+                .status(cart.getStatus())
                 .userId(cart.getUser() != null ? cart.getUser().getId() : null)
                 .userFullName(cart.getUser() != null ? cart.getUser().getFullName() : null)
-                .status(cart.getStatus())
                 .build();
     }
 
@@ -24,12 +24,11 @@ public class CartMapper {
     }
 
     public static Cart createCartRequestToCart(CreateCartRequest request, User user) {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         return Cart.builder()
-                .user(user)
                 .status(request.getStatus())
-                .createdAt(timestamp)
-                .updatedAt(timestamp)
+                .user(user)
+                .createdAt(OffsetDateTime.now())
+                .updatedAt(OffsetDateTime.now())
                 .build();
     }
 }

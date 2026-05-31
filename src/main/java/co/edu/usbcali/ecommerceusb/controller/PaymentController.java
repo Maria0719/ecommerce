@@ -1,6 +1,7 @@
 package co.edu.usbcali.ecommerceusb.controller;
 
 import co.edu.usbcali.ecommerceusb.dto.CreatePaymentRequest;
+import co.edu.usbcali.ecommerceusb.dto.DeletePaymentResponse;
 import co.edu.usbcali.ecommerceusb.dto.PaymentResponse;
 import co.edu.usbcali.ecommerceusb.dto.UpdatePaymentRequest;
 import co.edu.usbcali.ecommerceusb.service.PaymentService;
@@ -39,7 +40,8 @@ public class PaymentController {
         return new ResponseEntity<>(paymentService.updatePayment(id, updatePaymentRequest), HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePayment(@PathVariable Integer id) throws Exception {paymentService.deletePayment(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<DeletePaymentResponse> deletePayment(
+            @PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(paymentService.deletePayment(id), HttpStatus.OK);
     }
 }

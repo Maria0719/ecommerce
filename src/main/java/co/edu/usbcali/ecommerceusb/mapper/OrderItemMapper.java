@@ -6,7 +6,7 @@ import co.edu.usbcali.ecommerceusb.model.Order;
 import co.edu.usbcali.ecommerceusb.model.OrderItem;
 import co.edu.usbcali.ecommerceusb.model.Product;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class OrderItemMapper {
@@ -27,14 +27,15 @@ public class OrderItemMapper {
         return orderItems.stream().map(OrderItemMapper::modelToOrderItemResponse).toList();
     }
 
-    public static OrderItem createOrderItemRequestToOrderItem(CreateOrderItemRequest request, Order order, Product product) {
+    public static OrderItem createOrderItemRequestToOrderItem(CreateOrderItemRequest request,
+                                                              Order order, Product product) {
         return OrderItem.builder()
                 .order(order)
                 .product(product)
                 .quantity(request.getQuantity())
                 .unitPriceSnapshot(request.getUnitPriceSnapshot())
                 .lineTotal(request.getLineTotal())
-                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(OffsetDateTime.now())
                 .build();
     }
 }

@@ -1,4 +1,3 @@
-//espacio de almacenamiento centralizado
 package co.edu.usbcali.ecommerceusb.repository;
 
 import co.edu.usbcali.ecommerceusb.model.CartItem;
@@ -7,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
+    Boolean existsByProductId(Integer productId);
+    Boolean existsByCartId(Integer cartId);
 }

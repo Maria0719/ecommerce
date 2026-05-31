@@ -1,34 +1,24 @@
 package co.edu.usbcali.ecommerceusb.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Timestamp;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(
-        name = "orders",
-        schema = "public",
-        indexes = {
-                @Index(name = "idx_orders_user_created_at", columnList = "user_id, created_at DESC"),
-                @Index(name = "idx_orders_status_created_at", columnList = "status, created_at DESC")
-        }
-)
+@Table(name = "orders")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "user_id",
             nullable = false,
@@ -37,21 +27,26 @@ public class Order {
     )
     private User user;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private OrderStatus status;
 
-    @Column(name = "total_amount", nullable = false, columnDefinition = "numeric(12,2) default 0 check (total_amount >= 0)")
+    @Column(name = "total_amount", nullable = false, precision = 12, scale = 2)
     private BigDecimal totalAmount;
 
-    @Column(nullable = false, columnDefinition = "text default 'COP'")
+    @Column(nullable = false)
     private String currency;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp createdAt;
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false
+    )
+    private OffsetDateTime createdAt;
 
     @Column(name = "paid_at")
-    private Timestamp paidAt;
+    private OffsetDateTime paidAt;
 
     @Column(name = "cancelled_at")
-    private Timestamp cancelledAt;
+    private OffsetDateTime cancelledAt;
 }

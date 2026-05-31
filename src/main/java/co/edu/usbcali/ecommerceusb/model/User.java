@@ -1,13 +1,10 @@
 package co.edu.usbcali.ecommerceusb.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -16,13 +13,8 @@ import java.time.LocalDate;
 @Entity
 @Table(
         name = "users",
-        schema = "public",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uq_users_document", columnNames = {"document_type_id", "document_number"})
-        },
-        indexes = {
-                @Index(name = "idx_users_document", columnList = "document_type_id, document_number"),
-                @Index(name = "idx_users_country", columnList = "country")
+                @UniqueConstraint(columnNames = {"document_type_id", "document_number"})
         }
 )
 public class User {
@@ -34,13 +26,12 @@ public class User {
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @Column
     private String phone;
 
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "document_type_id",
             nullable = false,
@@ -53,18 +44,23 @@ public class User {
     private String documentNumber;
 
     @Column(name = "birth_date", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDate birthDate;
 
     @Column(nullable = false)
     private String country;
 
-    @Column
     private String address;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp createdAt;
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false
+    )
+    private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp updatedAt;
+    @Column(
+            name = "updated_at",
+            nullable = false
+    )
+    private OffsetDateTime updatedAt;
 }

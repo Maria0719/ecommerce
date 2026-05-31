@@ -1,19 +1,17 @@
 package co.edu.usbcali.ecommerceusb.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.util.Set;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "categories", schema = "public")
+@Table(name = "categories")
 public class Category {
 
     @Id
@@ -24,13 +22,9 @@ public class Category {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "parent_id",
-            foreignKey = @ForeignKey(name = "fk_categories_parent"),
-            referencedColumnName = "id"
-    )
+    @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp createdAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
 }

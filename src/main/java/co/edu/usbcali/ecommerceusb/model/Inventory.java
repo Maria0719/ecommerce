@@ -1,12 +1,9 @@
 package co.edu.usbcali.ecommerceusb.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -15,9 +12,8 @@ import java.sql.Timestamp;
 @Entity
 @Table(
         name = "inventory",
-        schema = "public",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uq_inventory_product", columnNames = {"product_id"})
+                @UniqueConstraint(columnNames = "product_id")
         }
 )
 public class Inventory {
@@ -26,7 +22,7 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(optional = false)
     @JoinColumn(
             name = "product_id",
             nullable = false,
@@ -35,9 +31,12 @@ public class Inventory {
     )
     private Product product;
 
-    @Column(nullable = false, columnDefinition = "integer default 0 check (stock >= 0)")
+    @Column(nullable = false)
     private Integer stock;
 
-    @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp updatedAt;
+    @Column(
+            name = "updated_at",
+            nullable = false
+    )
+    private OffsetDateTime updatedAt;
 }

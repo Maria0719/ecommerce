@@ -5,7 +5,7 @@ import co.edu.usbcali.ecommerceusb.dto.InventoryResponse;
 import co.edu.usbcali.ecommerceusb.model.Inventory;
 import co.edu.usbcali.ecommerceusb.model.Product;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class InventoryMapper {
@@ -23,11 +23,12 @@ public class InventoryMapper {
         return inventories.stream().map(InventoryMapper::modelToInventoryResponse).toList();
     }
 
-    public static Inventory createInventoryRequestToInventory(CreateInventoryRequest request, Product product) {
+    public static Inventory createInventoryRequestToInventory(CreateInventoryRequest request,
+                                                              Product product) {
         return Inventory.builder()
                 .product(product)
                 .stock(request.getStock())
-                .updatedAt(new Timestamp(System.currentTimeMillis()))
+                .updatedAt(OffsetDateTime.now())
                 .build();
     }
 }

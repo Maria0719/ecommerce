@@ -1,8 +1,12 @@
 package co.edu.usbcali.ecommerceusb.service.impl;
 
 import co.edu.usbcali.ecommerceusb.dto.CreateDocumentTypeRequest;
+import co.edu.usbcali.ecommerceusb.dto.DeleteDocumentTypeResponse;
 import co.edu.usbcali.ecommerceusb.dto.DocumentTypeResponse;
 import co.edu.usbcali.ecommerceusb.dto.UpdateDocumentTypeRequest;
+import co.edu.usbcali.ecommerceusb.exception.BadRequestException;
+import co.edu.usbcali.ecommerceusb.exception.InternalServerErrorException;
+import co.edu.usbcali.ecommerceusb.exception.NotFoundException;
 import co.edu.usbcali.ecommerceusb.mapper.DocumentTypeMapper;
 import co.edu.usbcali.ecommerceusb.model.DocumentType;
 import co.edu.usbcali.ecommerceusb.repository.DocumentTypeRepository;
@@ -22,57 +26,90 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 
     @Override
     public List<DocumentTypeResponse> getDocumentTypes() {
-        List<DocumentType> documentTypes = documentTypeRepository.findAll();
-        if (documentTypes.isEmpty()) return List.of();
-        return DocumentTypeMapper.modelToDocumentTypeResponseList(documentTypes);
+        try {
+            List<DocumentType> documentTypes = documentTypeRepository.findAll();
+            if (documentTypes.isEmpty()) {
+                return List.of();
+            }
+            return DocumentTypeMapper.modelToDocumentTypeResponseList(documentTypes);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Error al obtener los tipos de documento: " + e.getMessage());
+        }
     }
 
     @Override
-    public DocumentTypeResponse getDocumentTypeById(Integer id) throws Exception {
-        if (id == null || id <= 0) throw new Exception("Debe ingresar un id válido para buscar");
+    public DocumentTypeResponse getDocumentTypeById(Integer id) {
+        if (id == null || id <= 0) {
+            throw new BadRequestException("Debe ingresar el id para buscar");
+        }
         DocumentType documentType = documentTypeRepository.findById(id)
-                .orElseThrow(() -> new Exception(String.format("Tipo de documento no encontrado con el id: %d", id)));
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                String.format("Tipo de documento no encontrado con el id: %d", id)));
         return DocumentTypeMapper.modelToDocumentTypeResponse(documentType);
     }
 
     @Override
-    public DocumentTypeResponse createDocumentType(CreateDocumentTypeRequest createDocumentTypeRequest) throws Exception {
-        if (Objects.isNull(createDocumentTypeRequest)) throw new Exception("El objeto createDocumentTypeRequest no puede ser nulo");
-        if (Objects.isNull(createDocumentTypeRequest.getCode()) || createDocumentTypeRequest.getCode().isBlank())
-            throw new Exception("El campo code no puede ser nulo ni vacío");
-        if (Objects.isNull(createDocumentTypeRequest.getName()) || createDocumentTypeRequest.getName().isBlank())
-            throw new Exception("El campo name no puede ser nulo ni vacío");
+    public DocumentTypeResponse createDocumentType(CreateDocumentTypeRequest request) {
+        if (Objects.isNull(request)) {
+            throw new BadRequestException("El objeto request no puede ser nulo.");
+        }
+        if (Objects.isNull(request.getCode()) || request.getCode().isBlank()) {
+            throw new BadRequestException("El campo code no puede ser nulo ni vacío.");
+        }
+        if (Objects.isNull(request.getName()) || request.getName().isBlank()) {
+            throw new BadRequestException("El campo name no puede ser nulo ni vacío.");
+        }
+
         DocumentType documentType = DocumentType.builder()
-                .code(createDocumentTypeRequest.getCode())
-                .name(createDocumentTypeRequest.getName())
+                .code(request.getCode())
+                .name(request.getName())
                 .createdAt(OffsetDateTime.now())
                 .build();
+
         documentType = documentTypeRepository.save(documentType);
         return DocumentTypeMapper.modelToDocumentTypeResponse(documentType);
     }
 
     @Override
-    public DocumentTypeResponse updateDocumentType(Integer id, UpdateDocumentTypeRequest updateDocumentTypeRequest) throws Exception {
-        if (id == null || id <= 0) throw new Exception("Debe ingresar un id válido para actualizar");
-        if (Objects.isNull(updateDocumentTypeRequest)) throw new Exception("El objeto updateDocumentTypeRequest no puede ser nulo");
-        if (Objects.isNull(updateDocumentTypeRequest.getCode()) || updateDocumentTypeRequest.getCode().isBlank())
-            throw new Exception("El campo code no puede ser nulo ni vacío");
-        if (Objects.isNull(updateDocumentTypeRequest.getName()) || updateDocumentTypeRequest.getName().isBlank())
-            throw new Exception("El campo name no puede ser nulo ni vacío");
-
+    public DocumentTypeResponse updateDocumentType(Integer id, UpdateDocumentTypeRequest request) {
+        if (id == null || id <= 0) {
+            throw new BadRequestException("Debe ingresar el id para actualizar");
+        }
         DocumentType documentType = documentTypeRepository.findById(id)
-                .orElseThrow(() -> new Exception(String.format("Tipo de documento no encontrado con el id: %d", id)));
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                String.format("Tipo de documento no encontrado con el id: %d", id)));
+        if (Objects.isNull(request)) {
+            throw new BadRequestException("El objeto request no puede ser nulo.");
+        }
+        if (Objects.isNull(request.getCode()) || request.getCode().isBlank()) {
+            throw new BadRequestException("El campo code no puede ser nulo ni vacío.");
+        }
+        if (Objects.isNull(request.getName()) || request.getName().isBlank()) {
+            throw new BadRequestException("El campo name no puede ser nulo ni vacío.");
+        }
 
-        documentType.setCode(updateDocumentTypeRequest.getCode());
-        documentType.setName(updateDocumentTypeRequest.getName());
+        documentType.setCode(request.getCode());
+        documentType.setName(request.getName());
+
         documentType = documentTypeRepository.save(documentType);
         return DocumentTypeMapper.modelToDocumentTypeResponse(documentType);
     }
 
     @Override
-    public void deleteDocumentType(Integer id) throws Exception {
-        if (id == null || id <= 0) throw new Exception("Debe ingresar un id válido para eliminar");
-        DocumentType documentType = documentTypeRepository.findById(id).orElseThrow(() -> new Exception(String.format("DocumentType no encontrado con el id: %d", id)));
+    public DeleteDocumentTypeResponse deleteDocumentType(Integer id) {
+        if (id == null || id <= 0) {
+            throw new BadRequestException("Debe ingresar el id para eliminar");
+        }
+        DocumentType documentType = documentTypeRepository.findById(id)
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                String.format("Tipo de documento no encontrado con el id: %d", id)));
+
         documentTypeRepository.delete(documentType);
+        return DeleteDocumentTypeResponse.builder()
+                .message(String.format("Tipo de documento con id %d eliminado correctamente", id))
+                .build();
     }
 }

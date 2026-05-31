@@ -1,13 +1,10 @@
 package co.edu.usbcali.ecommerceusb.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Timestamp;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -16,12 +13,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(
         name = "order_items",
-        schema = "public",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uq_order_product", columnNames = {"order_id", "product_id"})
-        },
-        indexes = {
-                @Index(name = "idx_order_items_order", columnList = "order_id")
+                @UniqueConstraint(columnNames = {"order_id", "product_id"})
         }
 )
 public class OrderItem {
@@ -30,7 +23,7 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "order_id",
             nullable = false,
@@ -39,24 +32,30 @@ public class OrderItem {
     )
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
+
     @JoinColumn(
             name = "product_id",
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_order_items_product"),
             referencedColumnName = "id"
     )
+
     private Product product;
 
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "unit_price_snapshot", nullable = false, columnDefinition = "numeric(12,2) check (unit_price_snapshot >= 0)")
+    @Column(name = "unit_price_snapshot", nullable = false, precision = 12, scale = 2)
     private BigDecimal unitPriceSnapshot;
 
-    @Column(name = "line_total", nullable = false, columnDefinition = "numeric(12,2) check (line_total >= 0)")
+    @Column(name = "line_total", nullable = false, precision = 12, scale = 2)
     private BigDecimal lineTotal;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp createdAt;
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false
+    )
+    private OffsetDateTime createdAt;
 }

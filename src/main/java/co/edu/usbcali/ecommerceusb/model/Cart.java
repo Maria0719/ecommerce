@@ -1,32 +1,26 @@
 package co.edu.usbcali.ecommerceusb.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(
-        name = "carts",
-        schema = "public",
-        indexes = {
-                @Index(name = "idx_carts_user_status", columnList = "user_id, status")
-        }
-)
+@Table(name = "carts")
 public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Column(nullable = false)
+    private String status;
+
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "user_id",
             nullable = false,
@@ -35,12 +29,16 @@ public class Cart {
     )
     private User user;
 
-    @Column(nullable = false)
-    private String status;
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false
+    )
+    private OffsetDateTime createdAt;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp createdAt;
-
-    @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp updatedAt;
+    @Column(
+            name = "updated_at",
+            nullable = false
+    )
+    private OffsetDateTime updatedAt;
 }

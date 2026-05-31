@@ -1,12 +1,9 @@
 package co.edu.usbcali.ecommerceusb.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -15,14 +12,8 @@ import java.sql.Timestamp;
 @Entity
 @Table(
         name = "payments",
-        schema = "public",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uq_payments_idempotency_key", columnNames = {"idempotency_key"})
-        },
-        indexes = {
-                @Index(name = "idx_payments_order", columnList = "order_id")
-                // El índice único parcial (uq_one_success_payment_per_order) no puede expresarse directamente en JPA,
-                // se maneja a nivel de base de datos o con validaciones en la aplicación.
+                @UniqueConstraint(columnNames = "idempotency_key")
         }
 )
 public class Payment {
@@ -31,7 +22,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "order_id",
             nullable = false,
@@ -40,8 +31,9 @@ public class Payment {
     )
     private Order order;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private PaymentStatus status;
 
     @Column(name = "provider_ref")
     private String providerRef;
@@ -49,6 +41,10 @@ public class Payment {
     @Column(name = "idempotency_key", nullable = false)
     private String idempotencyKey;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Timestamp createdAt;
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false
+    )
+    private OffsetDateTime createdAt;
 }

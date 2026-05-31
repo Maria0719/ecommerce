@@ -4,7 +4,7 @@ import co.edu.usbcali.ecommerceusb.dto.CategoryResponse;
 import co.edu.usbcali.ecommerceusb.dto.CreateCategoryRequest;
 import co.edu.usbcali.ecommerceusb.model.Category;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class CategoryMapper {
@@ -14,7 +14,6 @@ public class CategoryMapper {
                 .id(category.getId())
                 .name(category.getName())
                 .parentId(category.getParent() != null ? category.getParent().getId() : null)
-                .parentName(category.getParent() != null ? category.getParent().getName() : null)
                 .build();
     }
 
@@ -22,11 +21,12 @@ public class CategoryMapper {
         return categories.stream().map(CategoryMapper::modelToCategoryResponse).toList();
     }
 
-    public static Category createCategoryRequestToCategory(CreateCategoryRequest request, Category parent) {
+    public static Category createCategoryRequestToCategory(CreateCategoryRequest request,
+                                                           Category parent) {
         return Category.builder()
                 .name(request.getName())
                 .parent(parent)
-                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(OffsetDateTime.now())
                 .build();
     }
 }

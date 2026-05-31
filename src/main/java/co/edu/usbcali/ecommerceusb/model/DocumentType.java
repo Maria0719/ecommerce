@@ -1,10 +1,7 @@
 package co.edu.usbcali.ecommerceusb.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
@@ -13,20 +10,28 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "document_types", schema = "public")
+@Table(
+        name = "document_types",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "code")
+        }
+)
 public class DocumentType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "code", nullable = false, unique = true, columnDefinition = "text")
+    @Column(nullable = false, unique = true)
     private String code;
 
-    @Column(name = "name", nullable = false, columnDefinition = "text")
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false
+    )
     private OffsetDateTime createdAt;
 }

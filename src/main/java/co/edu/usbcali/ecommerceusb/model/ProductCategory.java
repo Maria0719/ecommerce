@@ -1,10 +1,7 @@
 package co.edu.usbcali.ecommerceusb.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
@@ -13,12 +10,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(
         name = "product_categories",
-        schema = "public",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uq_product_category", columnNames = {"product_id", "category_id"})
-        },
-        indexes = {
-                @Index(name = "idx_product_categories_category", columnList = "category_id, product_id")
+                @UniqueConstraint(columnNames = {"product_id", "category_id"})
         }
 )
 public class ProductCategory {
@@ -27,7 +20,7 @@ public class ProductCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "product_id",
             nullable = false,
@@ -36,7 +29,7 @@ public class ProductCategory {
     )
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "category_id",
             nullable = false,

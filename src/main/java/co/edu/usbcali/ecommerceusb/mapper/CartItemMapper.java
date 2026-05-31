@@ -1,4 +1,3 @@
-// transforma datos de un formato a otro
 package co.edu.usbcali.ecommerceusb.mapper;
 
 import co.edu.usbcali.ecommerceusb.dto.CartItemResponse;
@@ -7,7 +6,7 @@ import co.edu.usbcali.ecommerceusb.model.Cart;
 import co.edu.usbcali.ecommerceusb.model.CartItem;
 import co.edu.usbcali.ecommerceusb.model.Product;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class CartItemMapper {
@@ -26,14 +25,14 @@ public class CartItemMapper {
         return cartItems.stream().map(CartItemMapper::modelToCartItemResponse).toList();
     }
 
-    public static CartItem createCartItemRequestToCartItem(CreateCartItemRequest request, Cart cart, Product product) {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+    public static CartItem createCartItemRequestToCartItem(CreateCartItemRequest request,
+                                                           Cart cart, Product product) {
         return CartItem.builder()
                 .cart(cart)
                 .product(product)
                 .quantity(request.getQuantity())
-                .createdAt(timestamp)
-                .updatedAt(timestamp)
+                .createdAt(OffsetDateTime.now())
+                .updatedAt(OffsetDateTime.now())
                 .build();
     }
 }
